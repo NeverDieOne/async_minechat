@@ -9,7 +9,7 @@ async def tcp_echo_client():
     reader, writer = await asyncio.open_connection(os.getenv("HOST"), os.getenv("PORT"))
 
     while True:
-        data = await reader.read(1024)
+        data = await reader.readuntil(separator=b'\n')
         print(f'{data.decode()!r}')
 
 
