@@ -27,7 +27,7 @@ python listen-minechat.py --host minechat.dvmn.org --port 5000 --file output.txt
     * `username` - никнейм для регистрации (указывается в отсутствии токена !!!)
     
 ```bash
-python write-minechat.py --host minechat.dvmn.org --port 5050 --message Hello
+python write-minechat.py --host minechat.dvmn.org --port 5050 --text Hello
 ```
 
 #### <Опционально> `.env`
