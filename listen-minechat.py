@@ -3,12 +3,10 @@ import asyncio
 import aiofiles
 import argparse
 import datetime
+import os
 
-load_dotenv()
 
-
-# TODO сделать проверку на обрыв соединения
-async def tcp_echo_client(host, port, filename):
+async def listen_tcp_connection(host, port, filename):
     reader, writer = await asyncio.open_connection(host, port)
 
     async with aiofiles.open(filename, mode='a') as file:
@@ -20,10 +18,14 @@ async def tcp_echo_client(host, port, filename):
 
 
 if __name__ == '__main__':
+    load_dotenv()
+
     parser = argparse.ArgumentParser(description='Read messages from TCP connection')
     parser.add_argument('--port', help='Port to connection')
     parser.add_argument('--host', help='Host to connection')
     parser.add_argument('--file', help='Output file with chat')
     args = parser.parse_args()
 
-    asyncio.run(tcp_echo_client(args.host, args.port, args.file))
+    asyncio.run(listen_tcp_connection(args.host or os.getenv('HOST'),
+                                      args.port or os.getenv('LISTEN_PORT'),
+                                      args.file or os.getenv('FILE')))
