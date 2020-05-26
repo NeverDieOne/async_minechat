@@ -6,13 +6,17 @@ from dotenv import load_dotenv
 import os
 
 
+def clean_string(string: str):
+    return string.replace('\\n', '')
+
+
 async def register(username, writer, reader):
     print('Неизвестный токен. Проверьте его или зарегистрируйте заново.')
 
     if not username:
         username = input('Введи желаемый nickname: ')
 
-    writer.write(f"{username}\n\n".encode())
+    writer.write(f"{clean_string(username)}\n\n".encode())
     await writer.drain()
 
     logging.info(await reader.readuntil(b'\n'))
@@ -29,7 +33,7 @@ async def authorise(token, writer, reader):
     if not token:
         token = input('Введи token: ')
 
-    writer.write(f"{token}\n".encode())
+    writer.write(f"{clean_string(token)}\n".encode())
     await writer.drain()
 
     recieved_data = json.loads(await reader.readuntil(b'\n'))
@@ -41,11 +45,10 @@ async def submit_message(writer, message=None):
     if not message:
         message = input('>> ')
 
-    writer.write(f"{message}\n\n".encode())
+    writer.write(f"{clean_string(message)}\n\n".encode())
     await writer.drain()
 
 
-# TODO придумать как убрать \n в сообщениях (шаг 12)
 async def write_to_tcp_connection(arguments):
     host = os.getenv('HOST') or arguments.host
     port = os.getenv('WRITE_PORT') or arguments.port
